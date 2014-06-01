@@ -1,18 +1,10 @@
+%%
+%% This module defines a somewhat generic pattern to connect to
+%% beanstalk and listen for beanstalk messages.
+%%
 -module(queue_listener).
--export([ connect_and_listen/2, echo_message/3, store_and_notify_registration/3 ]).
--export([ start_registration_link/0, start_notify_link/0 ]).
+-export([ connect_and_listen/2 ]).
 -export([ time_stamp/0 ]).
-
-% Here's the setup we need
-% application:start(bson).
-% application:start(mongodb).
-% { ok, Conn } = mongo:connect(localhost).
-
-start_registration_link() ->
-  spawn_link(?MODULE, connect_and_listen, [ boob, fun store_and_notify_registration/3 ]).
-
-start_notify_link() ->
-  spawn_link(?MODULE, connect_and_listen, [ notify, fun echo_message/3 ]).
 
 connect_and_listen(Tube, ReceiveFun) ->
   case beanstalk:connect() of
@@ -54,19 +46,6 @@ process_queue(Q, ReceiveFun, Conn) ->
   end,
   process_queue(Q, ReceiveFun, Conn).
 
-echo_message(Message, _Q, _Conn) ->
-  io:format("Received Message: ~p~n", [ Message ]).
-
-store_and_notify_registration(Message, Q, Conn) ->
-  case string:tokens(Message, "|") of
-    [ "register", Robot ] ->
-      register_robot(Q, Conn, Robot);
-    [ "unregister", Robot ] ->
-      unregister_robot(Q, Conn, Robot);
-    _ ->
-      io:format("Unknown message received: ~p~n", [ Message ])
-  end.
-
 time_stamp() ->
   iso_8601_fmt(calendar:local_time()).
 
@@ -79,42 +58,3 @@ iso_8601_fmt(DateTime) ->
                 [Year, Month, Day, Hour, Min, Sec]).
 
 
-register_robot(Q, Conn, Robot) ->
-  io:format("Registering robot (~p) in the database~n", [ Robot ]),
-  mongo:do(safe, master, Conn, registrations, fun() ->
-      case mongo:find_one(registrations, { robot, Robot }) of
-        {} -> 
-          % Didn't find the robot
-          % Inserting the robot
-          mongo:insert(registrations, { robot, Robot,
-                                      registered, true,
-                                      created_at, time_stamp(),
-                                      updated_at, time_stamp() });
-        { Doc } ->
-          % Found the record, now we need to update the updated at and registration fields.
-          % Parse out the values of the record
-          { '_id', Id, robot, _Robot, registered, _Registered, created_at, _CreatedAt, updated_at, _UpdatedAt } = Doc,
-          io:format("Fixing to update database record~n"),
-          mongo:modify(registrations, { '_id', Id }, { '$set', { registered, true, updated_at, time_stamp() }} ),
-          io:format("Done updating database record~n")
-      end
-    end
-  ),
-  beanstalk:put(Q, binary:list_to_bin(io_lib:format("robot_registered|~s", [ Robot ]))).
-
-unregister_robot(Q, Conn, Robot) ->
-  mongo:do(safe, master, Conn, registrations, fun() ->
-      case mongo:find_one(registrations, { robot, Robot, registered, true }) of
-        {} ->
-          io:format("Unable to find db entry for robot unregistration: ~p~n", [ Robot ]);
-        { Doc } ->
-          % Found the record, now we need to update the updated at and registration fields.
-          % Parse out the values of the record
-          { '_id', Id, robot, _Robot, registered, _Registered, created_at, _CreatedAt, updated_at, _UpdatedAt } = Doc,
-          io:format("Fixing to update database record~n"),
-          mongo:modify(registrations, { '_id', Id }, { '$set', { registered, false, updated_at, time_stamp() }} ),
-          io:format("Done updating database record~n")
-      end
-    end
-  ),
-  beanstalk:put(Q, binary:list_to_bin(io_lib:format("robot_unregistered|~s", [ Robot ]))).
