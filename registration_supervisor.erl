@@ -18,5 +18,8 @@ init({}) ->
           permanent, 1000, worker, [ registration_worker ]},
         { notifier,
           { notification_worker, start_link, [] },
-          permanent, 1000, worker, [ notification_worker ]}
+          permanent, 1000, worker, [ notification_worker ]},
+        { commander_worker,
+          { command_worker, start_link, [ 5555 ] },
+          permanent, 1000, worker, [ command_worker ]}
         ]}}.

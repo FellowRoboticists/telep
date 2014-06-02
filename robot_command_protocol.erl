@@ -25,7 +25,7 @@ loop(init, Socket, Transport, Q) ->
       case string:tokens(Data, "|") of
         [ "robot", _RobotName ] ->
           % Valid challenge response. Put a message in the queue
-          { inserted, _ } = beanstalk:put(Q, binary:list_to_bin(Data)),
+          { inserted, _ } = beanstalk:put(Q, binary:list_to_bin(io_lib:format("register|~s", [ _RobotName ]))),
           loop(command_wait, Socket, Transport, Q);
         _ ->
           io:format("Invalid challenge response: ~s~n", [ Data ])
@@ -50,11 +50,11 @@ receive_message(Socket, Transport) ->
   receive_message_content(Socket, Transport, Length).
 
 receive_message_length(Socket, Transport) ->
-  { ok, BLength } = Transport:recv(Socket, 1),
+  { ok, BLength } = Transport:recv(Socket, 1, 10000),
   { ok, binary:decode_unsigned(BLength) }.
 
 receive_message_content(Socket, Transport, Length) ->
-  { ok, BString } = Transport:recv(Socket, Length),
+  { ok, BString } = Transport:recv(Socket, Length, 10000),
   { ok, binary:bin_to_list(BString) }.
 
 send_messages(_, _, []) ->
