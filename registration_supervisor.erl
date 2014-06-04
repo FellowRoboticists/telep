@@ -19,6 +19,9 @@ init({}) ->
         { notifier,
           { notification_worker, start_link, [] },
           permanent, 1000, worker, [ notification_worker ]},
+        { command_queuer,
+          { command_queue_worker, start_link, [] },
+          permanent, 1000, worker, [ command_queue_worker ]},
         { commander_worker,
           { command_worker, start_link, [ 5555 ] },
           permanent, 1000, worker, [ command_worker ]}
