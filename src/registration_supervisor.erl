@@ -5,8 +5,14 @@
 -module(registration_supervisor).
 -behavior(supervisor).
 
--export([ start_link/0 ]).
+-export([ start/2, stop/1, start_link/0 ]).
 -export([ init/1 ]).
+
+start(normal, _Args) ->
+  supervisor:start_link({local, ?MODULE}, ?MODULE, {}).
+
+stop(_State) ->
+  ok.
 
 start_link() ->
   supervisor:start_link({local, ?MODULE}, ?MODULE, {}).

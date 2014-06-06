@@ -1,0 +1,25 @@
+{ application, telep,
+  [ 
+    { description, "Support for the Telepresence Robot" },
+    { vsn, "0.1.0" },
+    { modules, [
+                 command_queue_worker,
+		 command_worker,
+		 commands,
+		 notification_worker,
+	   	 q_params,
+	   	 queue_listener,
+		 registration_supervisor,
+		 registration_worker,
+		 robot_command_protocol ] },
+    { registered, [ command_queuer ] },
+    { applications, [ kernel,
+		      stdlib,
+		      ranch,
+                      bson,
+		      mongodb ] },
+    { mod, { registration_supervisor, [] } },
+    { env, [] }
+] 
+}.
+
