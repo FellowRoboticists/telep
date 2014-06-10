@@ -1,0 +1,5 @@
+io:format("In the configuration file:~n").
+% code:add_path("/usr/lib/erlang/lib/ranch/ebin").
+% code:add_path("/usr/lib/erlang/lib/bson/ebin").
+% code:add_path("/usr/lib/erlang/lib/mongodb/ebin").
+% code:add_path("/usr/lib/erlang/lib/beanstalk/ebin").

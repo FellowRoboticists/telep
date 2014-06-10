@@ -2,3 +2,9 @@
 *.beam
 log
 www
+extract
+rel
+rel1
+*.boot
+*.script
+*.tar.gz

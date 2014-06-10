@@ -1,0 +1,10 @@
+{ release,
+  { "telep", "0.1.0" },
+  { erts, "6.0" },
+  [ { kernel, "3.0" },
+    { stdlib, "2.0" },
+    { ranch, "0.9.0", permanent },
+    { bson, "0", permanent },
+    { mongodb, "0.2.1", permanent },
+    { telep, "0.1.0", permanent } ]
+}.
