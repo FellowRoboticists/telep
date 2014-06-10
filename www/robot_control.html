@@ -1,0 +1,89 @@
+<html>
+  <head>
+    <title>The Robot Control Page</title>
+  </head>
+  <body>
+    <h1>Robot Control</h1>
+    <p>Robot ID: <input type="text" name="robot_id" id="robot_id"></p>
+    <table>
+      <thead>
+      </thead>
+      <tbody>
+        <tr>
+          <td align="center"><input type="button" id="slow_down" value="Slow Down"></td>
+          <td align="center"><input type="button" id="forward" value="Forward"></td>
+          <td align="center"><input type="button" id="speed_up" value="Speed Up"></td>
+        </tr>
+        <tr>
+          <td align="center"><input type="button" id="rotate_ccw" value="Rotate CCW"></td>
+          <td align="center"><input type="button" id="stop" value="Stop"></td>
+          <td align="center"><input type="button" id="rotate_cw" value="Rotate CW"></td>
+        </tr>
+        <tr>
+          <td align="center"></td>
+          <td align="center"><input type="button" id="backward" value="Backward"></td>
+          <td align="center"></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div>
+      <p>The result of the call:</p>
+      <div id="div_result" />
+    </div>
+    <script src="assets/jquery-2.1.1.js"></script>
+    <script>
+      $( document ).ready(function() {
+        // Handle the slow-down button
+        $("#slow_down" ).click(function(event) {
+          var robotId = $( "#robot_id" ).val()
+          $.ajax({url: "robot/commands/slow_down?robot="+robotId, success:function(result) {
+              $("#div_result").html(result);
+          }});
+        });
+        // Handle the forward button
+        $("#forward" ).click(function(event) {
+          var robotId = $( "#robot_id" ).val()
+          $.ajax({url: "robot/commands/forward?robot="+robotId, success:function(result) {
+              $("#div_result").html(result);
+          }});
+        });
+        // Handle the speed up button
+        $("#speed_up" ).click(function(event) {
+          var robotId = $( "#robot_id" ).val()
+          $.ajax({url: "robot/commands/speed_up?robot="+robotId, success:function(result) {
+              $("#div_result").html(result);
+          }});
+        });
+        // Handle the rotate_ccw up button
+        $("#rotate_ccw" ).click(function(event) {
+          var robotId = $( "#robot_id" ).val()
+          $.ajax({url: "robot/commands/rotate_ccw?robot="+robotId, success:function(result) {
+              $("#div_result").html(result);
+          }});
+        });
+        // Handle the stop button
+        $("#stop" ).click(function(event) {
+          var robotId = $( "#robot_id" ).val()
+          $.ajax({url: "robot/commands/stop?robot="+robotId, success:function(result) {
+              $("#div_result").html(result);
+          }});
+        });
+        // Handle the rotate_cw button
+        $("#rotate_cw" ).click(function(event) {
+          var robotId = $( "#robot_id" ).val()
+          $.ajax({url: "robot/commands/rotate_cw?robot="+robotId, success:function(result) {
+              $("#div_result").html(result);
+          }});
+        });
+        // Handle the backward button
+        $("#backward" ).click(function(event) {
+          var robotId = $( "#robot_id" ).val()
+          $.ajax({url: "robot/commands/backward?robot="+robotId, success:function(result) {
+              $("#div_result").html(result);
+          }});
+        });
+      });
+    </script>
+  </body>
+</html>
