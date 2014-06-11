@@ -37,51 +37,79 @@
         // Handle the slow-down button
         $("#slow_down" ).click(function(event) {
           var robotId = $( "#robot_id" ).val()
-          $.ajax({url: "robot/commands/slow_down?robot="+robotId, success:function(result) {
-              $("#div_result").html(result);
-          }});
+          if ( robotId ) {
+            $.ajax({url: "robot/commands/slow_down?robot="+robotId, success:function(result) {
+                $("#div_result").html(result);
+            }});
+          } else {
+            alert("Must specify a robot id")
+          }
         });
         // Handle the forward button
         $("#forward" ).click(function(event) {
           var robotId = $( "#robot_id" ).val()
-          $.ajax({url: "robot/commands/forward?robot="+robotId, success:function(result) {
-              $("#div_result").html(result);
-          }});
+          if ( robotId ) {
+            $.ajax({url: "robot/commands/forward?robot="+robotId, success:function(result) {
+                $("#div_result").html(result);
+            }});
+          } else {
+            alert("Must specify a robot id")
+          }
         });
         // Handle the speed up button
         $("#speed_up" ).click(function(event) {
           var robotId = $( "#robot_id" ).val()
-          $.ajax({url: "robot/commands/speed_up?robot="+robotId, success:function(result) {
-              $("#div_result").html(result);
-          }});
+          if ( robotId ) {
+            $.ajax({url: "robot/commands/speed_up?robot="+robotId, success:function(result) {
+                $("#div_result").html(result);
+            }});
+          } else {
+            alert("Must specify a robot id")
+          }
         });
         // Handle the rotate_ccw up button
         $("#rotate_ccw" ).click(function(event) {
           var robotId = $( "#robot_id" ).val()
-          $.ajax({url: "robot/commands/rotate_ccw?robot="+robotId, success:function(result) {
-              $("#div_result").html(result);
-          }});
+          if ( robotId ) {
+            $.ajax({url: "robot/commands/rotate_ccw?robot="+robotId, success:function(result) {
+                $("#div_result").html(result);
+            }});
+          } else {
+            alert("Must specify a robot id")
+          }
         });
         // Handle the stop button
         $("#stop" ).click(function(event) {
           var robotId = $( "#robot_id" ).val()
-          $.ajax({url: "robot/commands/stop?robot="+robotId, success:function(result) {
-              $("#div_result").html(result);
-          }});
+          if ( robotId ) {
+            $.ajax({url: "robot/commands/stop?robot="+robotId, success:function(result) {
+                $("#div_result").html(result);
+            }});
+          } else {
+            alert("Must specify a robot id")
+          }
         });
         // Handle the rotate_cw button
         $("#rotate_cw" ).click(function(event) {
           var robotId = $( "#robot_id" ).val()
-          $.ajax({url: "robot/commands/rotate_cw?robot="+robotId, success:function(result) {
-              $("#div_result").html(result);
-          }});
+          if ( robotId ) {
+            $.ajax({url: "robot/commands/rotate_cw?robot="+robotId, success:function(result) {
+                $("#div_result").html(result);
+            }});
+          } else {
+            alert("Must specify a robot id")
+          }
         });
         // Handle the backward button
         $("#backward" ).click(function(event) {
           var robotId = $( "#robot_id" ).val()
-          $.ajax({url: "robot/commands/backward?robot="+robotId, success:function(result) {
-              $("#div_result").html(result);
-          }});
+          if ( robotId ) {
+            $.ajax({url: "robot/commands/backward?robot="+robotId, success:function(result) {
+                $("#div_result").html(result);
+            }});
+          } else {
+            alert("Must specify a robot id")
+          }
         });
       });
     </script>
