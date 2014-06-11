@@ -30,5 +30,8 @@ init({}) ->
           permanent, 1000, worker, [ command_queue_worker ]},
         { commander_worker,
           { command_worker, start_link, [ 5555 ] },
-          permanent, 1000, worker, [ command_worker ]}
+          permanent, 1000, worker, [ command_worker ]},
+        { web_server,
+          { web_server, start, [] },
+          permanent, 1000, worker, [ web_server ]}
         ]}}.
