@@ -7,3 +7,4 @@ rel1
 *.boot
 *.script
 *.tar.gz
+node_modules

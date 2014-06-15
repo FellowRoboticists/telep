@@ -1,61 +1,39 @@
 <html>
   <head>
     <title>WebSocket Test</title>
-    <script language="javascript" type="text/javascript">
-      var wsUri = "ws://localhost:8080/";
-      // var wsUri = "ws://echo.websocket.org/";
-      var output;
-
-      function init() {
-        output = document.getElementById("output");
-        testWebSocket();
-      }
-
-      function testWebSocket() {
-        websocket = new WebSocket(wsUri);
-        websocket.onopen = function(evt) { onOpen(evt); };
-        websocket.onclose = function(evt) { onClose(evt); };
-        websocket.onmessage = function(evt) { onMessage(evt); };
-        websocket.onerror = function(evt) { onError(evt); };
-      }
-
-      function onOpen(evt) {
-        writeToScreen("CONNECTED");
-        doSend("WebSocket rocks")
-      }
-
-      function onClose(evt) {
-        writeToScreen("DISCONNECTED")
-      }
-
-      function onMessage(evt) {
-        writeToScreen('<span style="color: blue;">RESPONSE: ' + evt.data + '</span>');
-        websocket.close()
-      }
-
-      function onError(evt) {
-        writeToScreen('<span style="color: red;">ERROR: ' + evt.data + '</span>');
-      }
-
-      function doSend(message) {
-        writeToScreen("SENT: " + message);
-        websocket.send(message);
-      }
-
-      function writeToScreen(message) {
-        var pre = document.createElement("p");
-        pre.style.wordWrap = "break-word";
-        pre.innerHTML = message;
-        output.appendChild(pre);
-      }
-
-      window.addEventListener("load", init, false);
-    </script>
 
   </head>
   <body>
     <h2>WebSocket Test</h2>
     <div id="output"></div>
+    <script src="assets/jquery-2.1.1.js"></script>
+    <script src="assets/jquery.websocket.js"></script>
+    <script>
+      alert("Got here.");
+      var wsUri = "ws://localhost:8080/";
+      //var wsUri = "ws://echo.websocket.org/";
+      var ws = $.websocket(wsUri, {
+        open: function(e) {
+      alert("Got here: open.");
+          $('#output').append('CONNECTED');
+          ws.send('websocket rocks')
+        },
+        close: function(e) {
+      alert("Got here: close.");
+          $('#output').append('DISCONNECTED')
+        },
+        message: function(e) { 
+      alert("Got here: message.");
+        $('#output').append('<br><span style="color: blue;">RESPONSE: ' + e.originalEvent.data + '</span><br>') 
+        },
+        events: {
+//          message: function(e) { 
+//      alert("Got here: message.");
+//            $('#output').append('<span style="color: blue;">RESPONSE: ' + e.data + '</span><br>') 
+//          }
+        }
+      });
+    </script>
   </body>
 </html>
 
