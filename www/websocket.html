@@ -9,21 +9,21 @@
     <script src="assets/jquery-2.1.1.js"></script>
     <script src="assets/jquery.websocket.js"></script>
     <script>
-      var wsUri = "ws://107.170.229.158:8080/";
+      var wsUri = "ws://107.170.229.158:8081/";
       alert("Trying to hit URI: " + wsUri);
       //var wsUri = "ws://echo.websocket.org/";
       var ws = $.websocket(wsUri, {
         open: function(e) {
-      alert("Got here: open.");
+        alert("Got here: open.");
           $('#output').append('CONNECTED');
           ws.send('websocket rocks')
         },
         close: function(e) {
-      alert("Got here: close.");
+        alert("Got here: close.");
           $('#output').append('DISCONNECTED')
         },
         message: function(e) { 
-      alert("Got here: message.");
+        alert("Got here: message.");
         $('#output').append('<br><span style="color: blue;">RESPONSE: ' + e.originalEvent.data + '</span><br>') 
         },
         events: {

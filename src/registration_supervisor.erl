@@ -22,9 +22,12 @@ init({}) ->
       [ { registrar, 
           { registration_worker, start_link, [] },
           permanent, 1000, worker, [ registration_worker ]},
-        { notifier,
-          { notification_worker, start_link, [] },
-          permanent, 1000, worker, [ notification_worker ]},
+% No longer need this worker to be supervised. We are using
+% a node application to provide the beanstalk listener/
+% communications.
+%        { notifier,
+%          { notification_worker, start_link, [] },
+%          permanent, 1000, worker, [ notification_worker ]},
         { command_queuer,
           { command_queue_worker, start_link, [] },
           permanent, 1000, worker, [ command_queue_worker ]},
