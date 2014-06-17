@@ -13,20 +13,20 @@ init(Ref, Socket, Transport, _Opts = []) ->
 	ok = ranch:accept_ack(Ref),
   { ok, Q } = beanstalk:connect(),
   { using, "registration" } = beanstalk:use(Q, registration),
-  { watching, _ } = beanstalk:watch(Q, commands),
-	loop(init, Socket, Transport, Q),
+  % { watching, _ } = beanstalk:watch(Q, commands),
+	loop(init, Socket, Transport, Q, nil),
 	ok = Transport:close(Socket),
   ok = beanstalk:close(Q).
 
-loop(init, Socket, Transport, Q) ->
+loop(init, Socket, Transport, Q, _) ->
   send_message(Socket, Transport, "And You Are?"),
   case receive_message(Socket, Transport) of
     { ok, Data } ->
       case string:tokens(Data, "|") of
-        [ "robot", _RobotName ] ->
+        [ "robot", RobotName ] ->
           % Valid challenge response. Put a message in the queue
-          { inserted, _ } = beanstalk:put(Q, binary:list_to_bin(io_lib:format("register|~s", [ _RobotName ]))),
-          loop(command_wait, Socket, Transport, Q);
+          { inserted, _ } = beanstalk:put(Q, binary:list_to_bin(io_lib:format("register|~s", [ RobotName ]))),
+          loop(command_wait, Socket, Transport, Q, RobotName);
         _ ->
           io:format("Invalid challenge response: ~s~n", [ Data ])
       end;
@@ -34,11 +34,12 @@ loop(init, Socket, Transport, Q) ->
       io:format("Error receiving init message: ~p~n", [ Error ])
   end;
 
-loop(command_wait, Socket, Transport, Q) ->
+loop(command_wait, Socket, Transport, Q, TubeName) ->
+  { watching, _ } = beanstalk:watch(Q, io_lib:format("~s_commands", [ TubeName ])),
   case beanstalk:reserve(Q) of
     { reserved, _JobId, BMessage } ->
       send_message(Socket, Transport, binary:bin_to_list(BMessage)),
-      loop(command_wait, Socket, Transport, Q);
+      loop(command_wait, Socket, Transport, Q, TubeName);
     Error ->
       io:format("Error reserving a job: ~p~n",  [ Error ])
   end.
