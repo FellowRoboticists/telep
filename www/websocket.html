@@ -9,8 +9,8 @@
     <script src="assets/jquery-2.1.1.js"></script>
     <script src="assets/jquery.websocket.js"></script>
     <script>
-      alert("Got here.");
-      var wsUri = "ws://localhost:8080/";
+      var wsUri = "ws://107.170.229.158:8080/";
+      alert("Trying to hit URI: " + wsUri);
       //var wsUri = "ws://echo.websocket.org/";
       var ws = $.websocket(wsUri, {
         open: function(e) {

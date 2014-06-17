@@ -8,3 +8,4 @@ rel1
 *.script
 *.tar.gz
 node_modules
+.erlang
