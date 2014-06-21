@@ -9,3 +9,5 @@ rel1
 *.tar.gz
 node_modules
 .erlang
+rebar
+apps/telep/ebin
