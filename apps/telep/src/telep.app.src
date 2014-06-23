@@ -19,7 +19,7 @@
                       bson,
 		      mongodb ] },
     { mod, { registration_supervisor, [] } },
-    { env, [] }
+    { env, [ { config_path, "/home/dsieh/Projects/telep/8080.conf" } ] }
 ] 
 }.
 
