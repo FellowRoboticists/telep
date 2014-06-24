@@ -17,6 +17,7 @@ init(Ref, Socket, Transport, _Opts = []) ->
   % { watching, _ } = beanstalk:watch(Q, commands),
 	loop(init, Socket, Transport, Q, Log, nil),
 	ok = Transport:close(Socket),
+  syslog:close(Log),
   ok = beanstalk:close(Q).
 
 loop(init, Socket, Transport, Q, Log, _) ->
@@ -38,8 +39,9 @@ loop(init, Socket, Transport, Q, Log, _) ->
 loop(command_wait, Socket, Transport, Q, Log, TubeName) ->
   { watching, _ } = beanstalk:watch(Q, io_lib:format("~s_commands", [ TubeName ])),
   case beanstalk:reserve(Q) of
-    { reserved, _JobId, BMessage } ->
+    { reserved, JobId, BMessage } ->
       send_message(Socket, Transport, binary:bin_to_list(BMessage)),
+      { deleted } = beanstalk:delete(Q, JobId),
       loop(command_wait, Socket, Transport, Q, Log, TubeName);
     Error ->
       syslog:log(Log, err, "Error reserving a job: ~p",  [ Error ])
