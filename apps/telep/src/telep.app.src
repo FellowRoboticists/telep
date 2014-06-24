@@ -17,7 +17,8 @@
 		      stdlib,
 		      ranch,
                       bson,
-		      mongodb ] },
+		      mongodb,
+		      syslog ] },
     { mod, { registration_supervisor, [] } },
     { env, [ { config_path, "/home/dsieh/Projects/telep/8080.conf" } ] }
 ] 

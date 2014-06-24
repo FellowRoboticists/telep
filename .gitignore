@@ -2,7 +2,7 @@
 *.beam
 log
 extract
-rel
+rel/telep
 rel1
 *.boot
 *.script
