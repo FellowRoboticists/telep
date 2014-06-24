@@ -5,6 +5,7 @@
   </head>
   <body>
     <h2>WebSocket Test</h2>
+    <input type="text" id="robot_name">
     <div id="output"></div>
     <script src="assets/jquery-2.1.1.js"></script>
     <script src="assets/jquery.websocket.js"></script>
@@ -24,6 +25,7 @@
         },
         message: function(e) { 
         alert("Got here: message.");
+        $('#robot_name').val(e.originalEvent.data.split('|')[1]);
         $('#output').append('<br><span style="color: blue;">RESPONSE: ' + e.originalEvent.data + '</span><br>') 
         },
         events: {
