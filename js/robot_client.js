@@ -10,7 +10,7 @@ client.connect(5555, 'localhost', function() {
 });
 
 client.on('data', function(data) {
-    console.log('Data: ' + data);
+    console.log('Data: ' + data.slice(1));
     if (first) {
       client.write(sprintf("%c%s", name.length, name));
       first = false;
