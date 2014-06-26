@@ -31,86 +31,67 @@
       <p>The result of the call:</p>
       <div id="div_result" />
     </div>
+    <div>
+      <p>The interation with the websocket.</p>
+      <div id="output"></div>
+    </div>
     <script src="assets/jquery-2.1.1.js"></script>
+    <script src="assets/jquery.websocket.js"></script>
     <script>
+      var wsUri = "ws://107.170.229.158:8081/";
+
+      /**
+       * Issue the robot a command
+       */
+      function issueCommand(command) {
+        var robotId = $( "#robot_id" ).val()
+        if ( robotId ) {
+          $.ajax({url: "robot/commands/"+command+"?robot="+robotId, success:function(result) {
+              $("#div_result").html(result);
+          }});
+        } else {
+          alert("Must specify a robot id")
+        }
+      }
+
+      var ws = $.websocket(wsUri, {
+        open: function(e) {
+          alert("Got here: open.");
+          $('#output').append('CONNECTED');
+          // ws.send('websocket rocks')
+        },
+        close: function(e) {
+          alert("Got here: close.");
+          $('#robot_id').val('');
+          $('#output').append('DISCONNECTED')
+        },
+        message: function(e) { 
+          alert("Got here: message.");
+          $('#robot_id').val(e.originalEvent.data.split('|')[1]);
+          $('#output').append('<br><span style="color: blue;">RESPONSE: ' + e.originalEvent.data + '</span><br>') 
+        }
+      });
+
+
+      /**
+       * Register the click-events to send the commands.
+       */
       $( document ).ready(function() {
+
         // Handle the slow-down button
-        $("#slow_down" ).click(function(event) {
-          var robotId = $( "#robot_id" ).val()
-          if ( robotId ) {
-            $.ajax({url: "robot/commands/slow_down?robot="+robotId, success:function(result) {
-                $("#div_result").html(result);
-            }});
-          } else {
-            alert("Must specify a robot id")
-          }
-        });
+        $("#slow_down" ).click(function(event) { issueCommand("slow_down") });
         // Handle the forward button
-        $("#forward" ).click(function(event) {
-          var robotId = $( "#robot_id" ).val()
-          if ( robotId ) {
-            $.ajax({url: "robot/commands/forward?robot="+robotId, success:function(result) {
-                $("#div_result").html(result);
-            }});
-          } else {
-            alert("Must specify a robot id")
-          }
-        });
+        $("#forward" ).click(function(event) { issueCommand("forward") });
         // Handle the speed up button
-        $("#speed_up" ).click(function(event) {
-          var robotId = $( "#robot_id" ).val()
-          if ( robotId ) {
-            $.ajax({url: "robot/commands/speed_up?robot="+robotId, success:function(result) {
-                $("#div_result").html(result);
-            }});
-          } else {
-            alert("Must specify a robot id")
-          }
-        });
+        $("#speed_up" ).click(function(event) { issueCommand("speed_up") });
         // Handle the rotate_ccw up button
-        $("#rotate_ccw" ).click(function(event) {
-          var robotId = $( "#robot_id" ).val()
-          if ( robotId ) {
-            $.ajax({url: "robot/commands/rotate_ccw?robot="+robotId, success:function(result) {
-                $("#div_result").html(result);
-            }});
-          } else {
-            alert("Must specify a robot id")
-          }
-        });
+        $("#rotate_ccw" ).click(function(event) { issueCommand("rotate_ccw") });
         // Handle the stop button
-        $("#stop" ).click(function(event) {
-          var robotId = $( "#robot_id" ).val()
-          if ( robotId ) {
-            $.ajax({url: "robot/commands/stop?robot="+robotId, success:function(result) {
-                $("#div_result").html(result);
-            }});
-          } else {
-            alert("Must specify a robot id")
-          }
-        });
+        $("#stop" ).click(function(event) { issueCommand("stop") });
         // Handle the rotate_cw button
-        $("#rotate_cw" ).click(function(event) {
-          var robotId = $( "#robot_id" ).val()
-          if ( robotId ) {
-            $.ajax({url: "robot/commands/rotate_cw?robot="+robotId, success:function(result) {
-                $("#div_result").html(result);
-            }});
-          } else {
-            alert("Must specify a robot id")
-          }
-        });
+        $("#rotate_cw" ).click(function(event) { issueCommand("rotate_cw") });
         // Handle the backward button
-        $("#backward" ).click(function(event) {
-          var robotId = $( "#robot_id" ).val()
-          if ( robotId ) {
-            $.ajax({url: "robot/commands/backward?robot="+robotId, success:function(result) {
-                $("#div_result").html(result);
-            }});
-          } else {
-            alert("Must specify a robot id")
-          }
-        });
+        $("#backward" ).click(function(event) { issueCommand("backward") });
       });
     </script>
   </body>
