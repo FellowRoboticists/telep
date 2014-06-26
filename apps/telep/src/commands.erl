@@ -15,41 +15,44 @@ path1(SessionID, Env, _Input) ->
 
 stop(SessionID, Env, _Input) ->
   RobotName = parse_robot_name(Env),
-  gen_server:cast(whereis(command_queuer), { stop, RobotName }),
+  gen_server:cast(whereis(command_queuer), { stop, format_tube_name(RobotName) }),
   mod_esi:deliver(SessionID, "command|stop").
 
 forward(SessionID, Env, _Input) ->
   RobotName = parse_robot_name(Env),
-  gen_server:cast(whereis(command_queuer), { forward, RobotName }),
+  gen_server:cast(whereis(command_queuer), { forward, format_tube_name(RobotName) }),
   mod_esi:deliver(SessionID, "command|forward").
 
 backward(SessionID, Env, _Input) ->
   RobotName = parse_robot_name(Env),
-  gen_server:cast(whereis(command_queuer), { backward, RobotName }),
+  gen_server:cast(whereis(command_queuer), { backward, format_tube_name(RobotName) }),
   mod_esi:deliver(SessionID, "command|backward").
 
 rotate_ccw(SessionID, Env, _Input) ->
   RobotName = parse_robot_name(Env),
-  gen_server:cast(whereis(command_queuer), { rotate_ccw, RobotName }),
+  gen_server:cast(whereis(command_queuer), { rotate_ccw, format_tube_name(RobotName) }),
   mod_esi:deliver(SessionID, "command|rotate_ccw").
 
 rotate_cw(SessionID, Env, _Input) ->
   RobotName = parse_robot_name(Env),
-  gen_server:cast(whereis(command_queuer), { rotate_cw, RobotName }),
+  gen_server:cast(whereis(command_queuer), { rotate_cw, format_tube_name(RobotName) }),
   mod_esi:deliver(SessionID, "command|rotate_cw").
 
 speed_up(SessionID, Env, _Input) ->
   RobotName = parse_robot_name(Env),
-  gen_server:cast(whereis(command_queuer), { speed_up, RobotName }),
+  gen_server:cast(whereis(command_queuer), { speed_up, format_tube_name(RobotName) }),
   mod_esi:deliver(SessionID, "command|speed_up").
 
 slow_down(SessionID, Env, _Input) ->
   RobotName = parse_robot_name(Env),
-  gen_server:cast(whereis(command_queuer), { slow_down, RobotName }),
+  gen_server:cast(whereis(command_queuer), { slow_down, format_tube_name(RobotName) }),
   mod_esi:deliver(SessionID, "command|slow_down").
 
 
 %% Private methods
+
+format_tube_name(RobotName) ->
+  io_lib:format("~s_commands", [ RobotName ]).
 
 parse_robot_name(Env) ->
   case lists:keyfind(query_string, 1, Env) of
