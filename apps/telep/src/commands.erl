@@ -1,55 +1,38 @@
+%%
+%% This module defines the active web actions for the web server.
+%% Think of each method in here as a controller action. Kind of
+%% a CGI thing.
+%%
 -module(commands).
 -export([ stop/3, forward/3, backward/3, rotate_ccw/3, rotate_cw/3, speed_up/3, slow_down/3 ]).
--export([path1/3]).
-
-path1(SessionID, Env, _Input) ->
-  io:format("Environment: ~p~n", [ Env ]),
-  % { _, QueryString } = lists:keyfind(query_string, 1, Env),
-  % { content_length, ContentLength } = lists:keyfind(content_length, 1, Env),
-  mod_esi:deliver(SessionID, "Hello from path1").
-  % mod_esi:deliver(SessionID, "Query string: "),
-  % mod_esi:deliver(SessionID, QueryString),
-  % mod_esi:deliver(SessionID, "Content length: "),
-  % mod_esi:deliver(SessionID, ContentLength).
-  %
 
 stop(SessionID, Env, _Input) ->
-  RobotName = parse_robot_name(Env),
-  gen_server:cast(whereis(command_queuer), { stop, format_tube_name(RobotName) }),
-  mod_esi:deliver(SessionID, "command|stop").
+  accept_web_request(SessionID, Env, stop).
 
 forward(SessionID, Env, _Input) ->
-  RobotName = parse_robot_name(Env),
-  gen_server:cast(whereis(command_queuer), { forward, format_tube_name(RobotName) }),
-  mod_esi:deliver(SessionID, "command|forward").
+  accept_web_request(SessionID, Env, forward).
 
 backward(SessionID, Env, _Input) ->
-  RobotName = parse_robot_name(Env),
-  gen_server:cast(whereis(command_queuer), { backward, format_tube_name(RobotName) }),
-  mod_esi:deliver(SessionID, "command|backward").
+  accept_web_request(SessionID, Env, backward).
 
 rotate_ccw(SessionID, Env, _Input) ->
-  RobotName = parse_robot_name(Env),
-  gen_server:cast(whereis(command_queuer), { rotate_ccw, format_tube_name(RobotName) }),
-  mod_esi:deliver(SessionID, "command|rotate_ccw").
+  accept_web_request(SessionID, Env, rotate_ccw).
 
 rotate_cw(SessionID, Env, _Input) ->
-  RobotName = parse_robot_name(Env),
-  gen_server:cast(whereis(command_queuer), { rotate_cw, format_tube_name(RobotName) }),
-  mod_esi:deliver(SessionID, "command|rotate_cw").
+  accept_web_request(SessionID, Env, rotate_cw).
 
 speed_up(SessionID, Env, _Input) ->
-  RobotName = parse_robot_name(Env),
-  gen_server:cast(whereis(command_queuer), { speed_up, format_tube_name(RobotName) }),
-  mod_esi:deliver(SessionID, "command|speed_up").
+  accept_web_request(SessionID, Env, speed_up).
 
 slow_down(SessionID, Env, _Input) ->
-  RobotName = parse_robot_name(Env),
-  gen_server:cast(whereis(command_queuer), { slow_down, format_tube_name(RobotName) }),
-  mod_esi:deliver(SessionID, "command|slow_down").
-
+  accept_web_request(SessionID, Env, slow_down).
 
 %% Private methods
+
+accept_web_request(SessionID, Env, Command) ->
+  RobotName = parse_robot_name(Env),
+  gen_server:cast(whereis(command_queuer), { Command, format_tube_name(RobotName) }),
+  mod_esi:deliver(SessionID, io_lib:format("command|~s", [ Command ])).
 
 format_tube_name(RobotName) ->
   io_lib:format("~s_commands", [ RobotName ]).

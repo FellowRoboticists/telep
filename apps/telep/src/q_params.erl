@@ -1,3 +1,8 @@
+%%
+%% This module provides methods to parse out 
+%% URL parameters. The goal is to return the
+%% the params to a list of name/value pairs.
+%%
 -module(q_params).
 -export([ parse_query_parameters/1 ]).
 

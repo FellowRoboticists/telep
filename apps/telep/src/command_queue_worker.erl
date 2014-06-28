@@ -1,3 +1,9 @@
+%%
+%% This module creates a gen_server that is responsible for
+%% enqueing the commands to a robot. It registers a named
+%% PID - command_queuer - that other parts of the application
+%% can use to submit requests to enqueue robot commands.
+%%
 -module(command_queue_worker).
 -behavior(gen_server).
 
