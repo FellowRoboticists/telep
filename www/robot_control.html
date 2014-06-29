@@ -56,18 +56,23 @@
 
       var ws = $.websocket(wsUri, {
         open: function(e) {
-          alert("Got here: open.");
           $('#output').append('CONNECTED');
           // ws.send('websocket rocks')
         },
         close: function(e) {
-          alert("Got here: close.");
           $('#robot_id').val('');
           $('#output').append('DISCONNECTED')
         },
         message: function(e) { 
-          alert("Got here: message.");
-          $('#robot_id').val(e.originalEvent.data.split('|')[1]);
+          var message = e.originalEvent.data;
+          var components = message.split('|');
+          var reg_unreg = components[0];
+          var robot_name = components[1]
+          if (reg_unreg === 'robot_registered') {
+            $('#robot_id').val(robot_name);
+          } else {
+            $('#robot_id').val('');
+          }
           $('#output').append('<br><span style="color: blue;">RESPONSE: ' + e.originalEvent.data + '</span><br>') 
         }
       });

@@ -13,7 +13,7 @@ var bs = require('nodestalker'),
  * received on the beanstalk 'notify' tube'.
  */
 function processNotification(ws, job, callback) {
-  ws.send("Received notification: " + job.data);
+  ws.send(job.data);
 
   setTimeout(function() { callback(); }, 1000)
 }
