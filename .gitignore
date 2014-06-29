@@ -11,3 +11,5 @@ node_modules
 .erlang
 rebar
 apps/telep/ebin
+group.lst
+user.lst
