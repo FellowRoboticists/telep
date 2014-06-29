@@ -1,6 +1,8 @@
 <html>
   <head>
     <title>The Robot Control Page</title>
+    <script src="assets/jquery-2.1.1.js"></script>
+    <script src="assets/jquery.websocket.js"></script>
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
     <!-- Optional theme -->
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
@@ -48,10 +50,8 @@
       <p>The interation with the websocket.</p>
       <div id="output"></div>
     </div>
-    <script src="assets/jquery-2.1.1.js"></script>
-    <script src="assets/jquery.websocket.js"></script>
     <script>
-      var wsUri = "ws://107.170.229.158:8081/";
+      var wsUri = "wss://daneel:8081/";
 
       /**
        * Issue the robot a command
