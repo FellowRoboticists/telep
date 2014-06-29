@@ -1,29 +1,42 @@
 <html>
   <head>
     <title>The Robot Control Page</title>
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
   </head>
   <body>
     <h1>Robot Control</h1>
     <p>Robot ID: <input type="text" name="robot_id" id="robot_id"></p>
     <table>
+      <colgroup>
+        <col width="150px"/>
+        <col width="150px"/>
+        <col width="150px"/>
+      </colgroup>
       <thead>
       </thead>
       <tbody>
-        <tr>
+        <tr style="height: 80px;">
           <td align="center"><input type="button" id="slow_down" value="Slow Down"></td>
           <td align="center"><input type="button" id="forward" value="Forward"></td>
           <td align="center"><input type="button" id="speed_up" value="Speed Up"></td>
         </tr>
-        <tr>
+        <tr style="height: 80px;">
           <td align="center"><input type="button" id="rotate_ccw" value="Rotate CCW"></td>
           <td align="center"><input type="button" id="stop" value="Stop"></td>
           <td align="center"><input type="button" id="rotate_cw" value="Rotate CW"></td>
         </tr>
-        <tr>
+        <tr/>
+        <tr style="height: 80px;">
           <td align="center"></td>
           <td align="center"><input type="button" id="backward" value="Backward"></td>
           <td align="center"></td>
         </tr>
+        <tr/>
       </tbody>
     </table>
 
