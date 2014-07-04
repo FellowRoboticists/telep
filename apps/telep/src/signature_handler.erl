@@ -17,9 +17,7 @@ start_link(KeyPath, PrivateKey) ->
 init([ KeyPath, PrivateKey ]) ->
   { ok, #keys{key_path=KeyPath, private_key={PrivateKey, null} } }.
 
-handle_call({ verify, SignedMessage }, 
-  _From,
-  S=#keys{key_path=KeyPath, public_keys=PublicKeys}) ->
+handle_call({ verify, SignedMessage }, _From, S=#keys{key_path=KeyPath, public_keys=PublicKeys}) ->
   [ Cmd, RobotName, Signature ] = string:tokens(SignedMessage, "|"),
   DigSig = base64:decode(Signature),
   Message = binary:list_to_bin(io_lib:format("~s|~s", [ Cmd, RobotName ])),

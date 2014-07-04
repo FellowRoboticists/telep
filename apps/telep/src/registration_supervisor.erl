@@ -36,5 +36,8 @@ init({}) ->
           permanent, 1000, worker, [ command_worker ]},
         { web_server,
           { web_server, start, [] },
-          permanent, 1000, worker, [ web_server ]}
+          permanent, 1000, worker, [ web_server ]},
+        { signature_handler,
+          { signature_handler, start_link, [ "/home/dsieh/Projects/telep", "telep" ] },
+          permanent, 1000, worker, [ signature_handler ] }
         ]}}.

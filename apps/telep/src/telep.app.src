@@ -12,7 +12,7 @@
 		 registration_worker,
 		 robot_command_protocol,
 		 web_server ] },
-    { registered, [ command_queuer ] },
+    { registered, [ command_queuer, signature ] },
     { applications, [ kernel,
 		      stdlib,
 		      ranch,
