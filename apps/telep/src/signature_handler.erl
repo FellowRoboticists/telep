@@ -69,8 +69,8 @@ sign_message(MessageToSign, Key) ->
 
 verify_signature(Message, DigSig, Key) ->
   case public_key:verify(Message, sha256, DigSig, Key) of
-    true -> Message;
-    false -> invalid
+    true -> { ok, Message };
+    false -> { invalid }
   end.
 
 load_key_for_robot(RobotName, KeyPath) ->
