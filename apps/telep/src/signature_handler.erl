@@ -10,8 +10,8 @@
 -export([ init/1, handle_call/3, handle_cast/2, handle_info/2, terminate/2, code_change/3 ]).
 
 start_link(KeyPath, PrivateKey) ->
-  { ok, Pid } = gen_server:start_link({global, signature}, ?MODULE, [ KeyPath, PrivateKey ], []),
-  % register(signature, Pid),
+  { ok, Pid } = gen_server:start_link(?MODULE, [ KeyPath, PrivateKey ], []),
+  register(signature, Pid),
   { ok, Pid }.
 
 init([ KeyPath, PrivateKey ]) ->
@@ -36,7 +36,20 @@ handle_call({ verify, SignedMessage },
         _ ->
           { reply, invalid, S }
       end
-  end.
+  end;
+
+handle_call({ sign, MessageToSign }, _From, S=#keys{key_path=KeyPath, private_key={KeyName,null}}) ->
+  FullPath = io_lib:format("~s/~s_private.pem", [ KeyPath, KeyName ]),
+  case load_key(FullPath) of 
+    { ok, Key } ->
+      { reply, sign_message(MessageToSign, Key), S#keys{private_key={KeyName,Key}} };
+    _ ->
+      { reply, invalid, S }
+  end;
+
+handle_call({ sign, MessageToSign }, _From, S=#keys{private_key={_KeyName,Key}}) ->
+  { reply, sign_message(MessageToSign, Key), S }.
+
 
 handle_cast(_, State) ->
   { noreply, State }.
@@ -52,6 +65,10 @@ code_change(_OldVsn, State, _Extra) ->
 
 % Private Methods
 
+sign_message(MessageToSign, Key) ->
+  Signature = public_key:sign(binary:list_to_bin(MessageToSign), sha256, Key),
+  io_lib:format("~s|~s", [ MessageToSign, base64:encode_to_string(Signature) ]).
+
 verify_signature(Message, DigSig, Key) ->
   case public_key:verify(Message, sha256, DigSig, Key) of
     true -> Message;
@@ -60,6 +77,9 @@ verify_signature(Message, DigSig, Key) ->
 
 load_key_for_robot(RobotName, KeyPath) ->
   FullPath = io_lib:format("~s/~s_public.pem", [ KeyPath, RobotName ]),
+  load_key(FullPath).
+
+load_key(FullPath) ->
   case filelib:is_regular(FullPath) of
     true ->
       { ok, PublicPemBin } = file:read_file(FullPath),
