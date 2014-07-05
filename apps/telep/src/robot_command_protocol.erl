@@ -94,28 +94,6 @@ receive_message(Socket, Transport) ->
       end;
     Error -> Error
   end.
-%  case receive_message_length(Socket, Transport) of
-%    { ok, Length } ->
-%      receive_message_content(Socket, Transport, Length);
-%    Error ->
-%      Error
-%  end.
-
-%receive_message_length(Socket, Transport) ->
-%  case Transport:recv(Socket, 1, 10000) of
-%    { ok, BLength } ->
-%      { ok, binary:decode_unsigned(BLength) };
-%    Error ->
-%      Error
-%  end.
-
-%receive_message_content(Socket, Transport, Length) ->
-%  case Transport:recv(Socket, Length, 10000) of
-%    { ok, BString } ->
-%      { ok, binary:bin_to_list(BString) };
-%    Error ->
-%      Error
-%  end.
 
 send_messages(_, _, []) ->
   io:format("No commands to send~n");
@@ -129,9 +107,3 @@ send_messages(Socket, Transport, [Message|Messages]) ->
 send_message(Socket, Transport, Message) ->
   SignedMessage = gen_server:call(whereis(signature), { sign, Message }),
   Transport:send(Socket, SignedMessage).
-%  case Transport:send(Socket, binary:encode_unsigned(length(Message))) of
-%    ok ->
-%      Transport:send(Socket, Message);
-%    Error ->
-%      Error
-%  end.
