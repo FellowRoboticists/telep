@@ -31,7 +31,9 @@ fs.readFile(publicKeyFile, 'ascii', function(err, data) {
 });
 
 function verifyServerMessage(data) {
-  var cmps = data.split('|');
+  var msg = data.toString();
+  console.log(msg);
+  var cmps = msg.split('|');
   var message = cmps[0];
   var signature = cmps[1];
   var verifier = crypto.createVerify('RSA-SHA256');
@@ -47,7 +49,9 @@ function signMessage(message) {
   var signer = crypto.createSign('RSA-SHA256');
   signer.update(message);
   var signature = signer.sign(privateKeyData, 'base64');
-  return signature + "|" + message;
+  var signedMessage = message + "|" + signature;
+  console.log(signedMessage);
+  return signedMessage;
 }
 
 client.connect(5555, 'daneel', function() {
