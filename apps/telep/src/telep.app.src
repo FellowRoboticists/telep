@@ -10,6 +10,7 @@
 	   	 queue_listener,
 		 registration_supervisor,
 		 registration_worker,
+		 signature_handler,
 		 robot_command_protocol,
 		 web_server ] },
     { registered, [ command_queuer, signature ] },
