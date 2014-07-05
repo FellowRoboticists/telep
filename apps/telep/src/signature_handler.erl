@@ -69,7 +69,7 @@ sign_message(MessageToSign, Key) ->
 
 verify_signature(Message, DigSig, Key) ->
   case public_key:verify(Message, sha256, DigSig, Key) of
-    true -> { ok, Message };
+    true -> { ok, binary:bin_to_list(Message) };
     false -> { invalid }
   end.
 
