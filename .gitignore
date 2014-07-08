@@ -13,3 +13,9 @@ rebar
 apps/telep/ebin
 group.lst
 user.lst
+
+# Ignore any generated keys
+*.pem
+*.crt
+*.csr
+*.key
