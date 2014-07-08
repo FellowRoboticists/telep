@@ -37,3 +37,11 @@ deploy_ws_server: /etc/init.d/ws_server /etc/sysconfig/ws_server /usr/local/ws_s
 	mkdir -p $@
 	chgrp telep $@
 	chmod g+w $@
+
+#
+# The main target for deploying the telep application
+#
+deploy_telep:
+	./rebar compile
+	./rebar generate
+	cp -R rel/telep /usr/local
