@@ -22,38 +22,38 @@ var bs = require('nodestalker'),
 
 var app = null;
 
- // dummy request processing
+// dummy request processing
 var processRequest = function( req, res ) {
   res.writeHead(200);
   res.end("All glory to WebSockets!\n");
 }
 
-/**
- * An asynchronous function to process the notifications
- * received on the beanstalk 'notify' tube'.
- */
-function processNotification(ws, job, callback) {
-  ws.send(job.data);
-
-  setTimeout(function() { callback(); }, 1000)
+//
+// Define an object to keep track of whether the
+// connection is still established
+// 
+function ConnectionState() {
+  this.connected = true;
 }
 
 /**
  * Watches for notifications on the beanstalk 'notify'
  * tube and hands them off for processing.
  */
-function watchForNotifications(ws) {
+function watchForNotifications(ws, connectionState) {
   var client = bs.Client();
   client.watch(tube).onSuccess(function(data) {
     client.reserve().onSuccess(function(job) {
       console.log('received job' + job);
-      watchForNotifications(ws);
+      if (connectionState.connected) {
+        watchForNotifications(ws, connectionState);
 
-      processNotification(ws, job, function() {
-        client.deleteJob(job.id).onSuccess(function(del_msg) {
-          client.disconnect();
+        processNotification(ws, job, connectionState, function() {
+          client.deleteJob(job.id).onSuccess(function(del_msg) {
+            client.disconnect();
+          });
         });
-      });
+      }
     });
   });
 }
@@ -70,11 +70,33 @@ if (cfg.ssl) {
 
 var wss = new WebSocketServer( { server: app } );
 
+/**
+ * An asynchronous function to process the notifications
+ * received on the beanstalk 'notify' tube'.
+ */
+function processNotification(ws, job, connectionState, callback) {
+  ws.send(job.data, function(err) {
+    if (err) {
+      console.log("Got error within socket");
+      console.log(err);
+      connectionState.connected = false;
+    }
+  });
+
+  setTimeout(function() { callback(); }, 1000)
+}
+
 // Deal with connections to the websocket server
 wss.on('connection', function(ws) {
 
   // A connection was established; do something
+  var connectionState = new ConnectionState();
 
-  watchForNotifications(ws);
+  watchForNotifications(ws, connectionState);
+
+  ws.on('close', function() {
+    console.log("The connection was closed");
+    connectionState.connected = false;
+  });
 
 });
