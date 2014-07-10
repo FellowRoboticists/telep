@@ -1,0 +1,5 @@
+# This is the sysconfig file for the ws_server
+# web socket server. There is no configuration
+# as of yet.
+
+export NODE_PATH=/usr/local/lib/node_modules

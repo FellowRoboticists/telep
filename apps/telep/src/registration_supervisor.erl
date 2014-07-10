@@ -38,6 +38,6 @@ init({}) ->
           { web_server, start, [] },
           permanent, 1000, worker, [ web_server ]},
         { signature_handler,
-          { signature_handler, start_link, [ "/home/dsieh/Projects/telep", "telep" ] },
+          { signature_handler, start_link, [ "/etc/telep", "telep" ] },
           permanent, 1000, worker, [ signature_handler ] }
         ]}}.

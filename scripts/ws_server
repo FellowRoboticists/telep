@@ -1,0 +1,75 @@
+#!/bin/bash
+
+# ws_server - Startup script for ws_server (node-based)
+
+# chkconfig: 35 85 15
+# description: ws_server is a node-based WebSocket server
+# processname: ws_server
+# server: /usr/local/ws_server/ws_server.js
+# pidfile: /var/run/ws_server.pid
+
+. /etc/rc.d/init.d/functions
+
+APP_NAME=ws_server
+OPTIONS=/usr/local/$APP_NAME/$APP_NAME.js
+LOGFILE=/var/log/$APP_NAME/$APP_NAME.log
+SYSCONFIG=/etc/sysconfig/$APP_NAME
+PID_FILE=/var/run/$APP_NAME.pid
+
+nodejs=${NODEJS-/usr/local/bin/node}
+
+NODEJS_USER=telep
+NODEJS_GROUP=telep
+
+# Source the configuration file
+. "$SYSCONFIG" || true
+
+start() {
+  echo -n $"Starting $APP_NAME: "
+  daemon --user "$NODEJS_USER" "$nodejs $OPTIONS >> $LOGFILE &"
+  # daemon --user "$NODEJS_USER" --pidfile "$PID_FILE" "$nodejs $OPTIONS >> $LOGFILE &"
+  RETVAL=$?
+  echo
+  [ $RETVAL -eq 0 ] && touch /var/lock/subsys/$APP_NAME
+}
+
+stop() {
+  echo -n $"Stopping $APP_NAME: "
+  killproc /usr/local/bin/node
+  RETVAL=$?
+  echo
+  [ $RETVAL -eq 0 ] && rm -f /var/lock/subsys/$APP_NAME
+}
+
+restart() {
+  stop
+  start
+}
+
+ulimit -n 12000
+RETVAL=0
+
+case "$1" in
+  start)
+    start
+    ;;
+  stop)
+    stop
+    ;;
+  restart)
+    restart
+    ;;
+  condrestart)
+    [ -f /var/lock/subsys/$APP_NAME ] && restart || :
+    ;;
+  status)
+    status $nodejs
+    RETVAL=$?
+    ;;
+  *)
+    echo "Usage: $0 {start|stop|status|restart|reload|force-reload|condrestart}"
+    RETVAL=1
+esac
+
+exit $RETVAL
+

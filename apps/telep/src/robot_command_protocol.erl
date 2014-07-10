@@ -85,27 +85,14 @@ loop(command_wait, Socket, Transport, Q, Log, TubeName) ->
 %% Private methods
 
 receive_message(Socket, Transport) ->
-  case receive_message_length(Socket, Transport) of
-    { ok, Length } ->
-      receive_message_content(Socket, Transport, Length);
-    Error ->
-      Error
-  end.
-
-receive_message_length(Socket, Transport) ->
-  case Transport:recv(Socket, 1, 10000) of
-    { ok, BLength } ->
-      { ok, binary:decode_unsigned(BLength) };
-    Error ->
-      Error
-  end.
-
-receive_message_content(Socket, Transport, Length) ->
-  case Transport:recv(Socket, Length, 10000) of
+  case Transport:recv(Socket, 0, 10000) of
     { ok, BString } ->
-      { ok, binary:bin_to_list(BString) };
-    Error ->
-      Error
+      SignedMessage = binary:bin_to_list(BString),
+      case gen_server:call(whereis(signature), { verify, SignedMessage }) of
+        { ok, Message } -> { ok, Message };
+        Error -> Error
+      end;
+    Error -> Error
   end.
 
 send_messages(_, _, []) ->
@@ -118,9 +105,5 @@ send_messages(Socket, Transport, [Message|Messages]) ->
   send_messages(Socket, Transport, Messages).
 
 send_message(Socket, Transport, Message) ->
-  case Transport:send(Socket, binary:encode_unsigned(length(Message))) of
-    ok ->
-      Transport:send(Socket, Message);
-    Error ->
-      Error
-  end.
+  SignedMessage = gen_server:call(whereis(signature), { sign, Message }),
+  Transport:send(Socket, SignedMessage).
