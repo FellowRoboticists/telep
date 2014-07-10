@@ -4,18 +4,6 @@
 # 2. Run some of the more common rebar commands
 #
 
-test_it: out/thing.it
-
-out/thing.it: out butter
-	@echo "The target: $@"
-	@echo "Dependent on: $^"
-
-out:
-	@echo "mkdir -p $@"
-
-butter:
-	@echo "Just butter"
-
 # 
 # The main target for deploying the ws_server
 #
