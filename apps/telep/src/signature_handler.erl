@@ -1,3 +1,9 @@
+%
+% This module provides cryptographic signature services
+% for the application. It provides calls to create a
+% digital signature as well as calls to verify a 
+% signed message.
+%
 -module(signature_handler).
 -behavior(gen_server).
 
