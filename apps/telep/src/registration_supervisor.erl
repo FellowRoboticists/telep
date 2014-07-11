@@ -39,5 +39,8 @@ init({}) ->
           permanent, 1000, worker, [ web_server ]},
         { signature_handler,
           { signature_handler, start_link, [ "/etc/telep", "telep" ] },
-          permanent, 1000, worker, [ signature_handler ] }
+          permanent, 1000, worker, [ signature_handler ] },
+        { robot_db,
+          { robot_db, start_link, [ ] },
+          permanent, 1000, worker, [ robot_db ] }
         ]}}.

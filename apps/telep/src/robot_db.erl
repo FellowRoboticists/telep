@@ -21,16 +21,17 @@ init([]) ->
   { ok, #persist{dbconn=Conn} }.
 
 handle_call({ robot_registered, RobotName }, _From, S=#persist{dbconn=Conn}) ->
-  mongo:do(safe, master, Conn, registrations, fun() ->
+  { ok, Registered } = mongo:do(safe, master, Conn, registrations, fun() ->
         case mongo:find_one(registrations, { robot, RobotName, registered, true }) of
           {} ->
             % Didn't find the robot or it wasn't registered
-            { reply, false, S };
+            false;
           { _Doc } ->
-            { reply, true, S }
+            true
         end
     end
-  ).
+  ),
+  { reply, Registered, S }.
 
 handle_cast(_, State) ->
   { noreply, State }.
