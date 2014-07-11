@@ -58,9 +58,14 @@
        */
       function issueCommand(command) {
         var robotId = $( "#robot_id" ).val()
+        var re = /is not registered/;
         if ( robotId ) {
           $.ajax({url: "robot/commands/"+command+"?robot="+robotId, success:function(result) {
-              $("#div_result").html(result);
+              if (result.match(re)) {
+                alert(result);
+              } else {
+                $("#div_result").html(result);
+              }
           }});
         } else {
           alert("Must specify a robot id")

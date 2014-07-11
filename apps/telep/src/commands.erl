@@ -31,8 +31,14 @@ slow_down(SessionID, Env, _Input) ->
 
 accept_web_request(SessionID, Env, Command) ->
   RobotName = parse_robot_name(Env),
-  gen_server:cast(whereis(command_queuer), { Command, format_tube_name(RobotName) }),
-  mod_esi:deliver(SessionID, io_lib:format("command|~s", [ Command ])).
+  case gen_server:call(whereis(robot_db), { robot_registered, RobotName }) of
+    true ->
+      % The robot is registered, go ahead and send the command
+      gen_server:cast(whereis(command_queuer), { Command, format_tube_name(RobotName) }),
+      mod_esi:deliver(SessionID, io_lib:format("command|~s", [ Command ]));
+    _ ->
+      mod_esi:deliver(SessionID, io_lib:format("Robot ~s is not registered", [ RobotName ]) )
+  end.
 
 format_tube_name(RobotName) ->
   io_lib:format("~s_commands", [ RobotName ]).
