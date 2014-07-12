@@ -1,0 +1,60 @@
+<html>
+  <head>
+    <title>The Robot Control Page</title>
+    <script src='/assets/jquery-2.1.1.js'></script>
+    <script src='/assets/jquery.websocket.js'></script>
+    <link rel='stylesheet' href='//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css'>
+    <!-- Optional theme -->
+    <link rel='stylesheet' href='//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css'>
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src='//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js'></script>
+  </head>
+  <body>
+    <h1>Robot Control</h1>
+    <label for='robot_id'>Robot ID:</label>
+    <select name='robot_id' id='robot_id'>
+      {{#registered_robots}}
+      <option value='{{robot}}'>{{robot}}</option>
+      {{/registered_robots}}
+    </select>
+    <table>
+      <colgroup>
+        <col width='150px'/>
+        <col width='150px'/>
+        <col width='150px'/>
+      </colgroup>
+      <thead>
+      </thead>
+      <tbody>
+        <tr style='height: 80px;'>
+          <td align='center'><input type='button' id='slow_down' value='Slow Down'></td>
+          <td align='center'><input type='button' id='forward' value='Forward'></td>
+          <td align='center'><input type='button' id='speed_up' value='Speed Up'></td>
+        </tr>
+        <tr style='height: 80px;'>
+          <td align='center'><input type='button' id='rotate_ccw' value='Rotate CCW'></td>
+          <td align='center'><input type='button' id='stop' value='Stop'></td>
+          <td align='center'><input type='button' id='rotate_cw' value='Rotate CW'></td>
+        </tr>
+        <tr/>
+        <tr style='height: 80px;'>
+          <td align='center'></td>
+          <td align='center'><input type='button' id='backward' value='Backward'></td>
+          <td align='center'></td>
+        </tr>
+        <tr/>
+      </tbody>
+    </table>
+
+    <div>
+      <p>The result of the call:</p>
+      <div id='div_result' />
+    </div>
+    <div>
+      <p>The interation with the websocket.</p>
+      <div id='output'></div>
+    </div>
+    <script src='/assets/robot_control.js'></script>
+  </body>
+</html>
