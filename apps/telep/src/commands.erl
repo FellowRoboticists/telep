@@ -4,10 +4,7 @@
 %% a CGI thing.
 %%
 -module(commands).
--export([ robot_control/3, stop/3, forward/3, backward/3, rotate_ccw/3, rotate_cw/3, speed_up/3, slow_down/3 ]).
-
-robot_control(SessionID, _Env, _Input) ->
-  mod_esi:deliver(SessionID, gen_server:call(whereis(templater), { view, robot_control }) ).
+-export([ stop/3, forward/3, backward/3, rotate_ccw/3, rotate_cw/3, speed_up/3, slow_down/3 ]).
 
 stop(SessionID, Env, _Input) ->
   accept_web_request(SessionID, Env, stop).

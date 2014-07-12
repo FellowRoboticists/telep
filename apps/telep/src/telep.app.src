@@ -6,6 +6,7 @@
                  command_queue_worker,
 		 command_worker,
 		 commands,
+		 pages,
 	   	 q_params,
 	   	 queue_listener,
 		 registration_supervisor,
