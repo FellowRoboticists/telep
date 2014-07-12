@@ -10,31 +10,24 @@ connect_and_listen(Tube, ReceiveFun) ->
   { ok, Log } = syslog:open("queue_listener", [ cons, perror, pid ], local3),
   case beanstalk:connect() of
     { ok, Q } ->
-      % Now, attempt to connect to the database
-      case mongo:connect(localhost) of
-        { ok, Conn } ->
-          register_and_listen_to_queue(Q, Tube, Log, ReceiveFun, Conn),
-          % Make sure we shut stuff down when we should
-          beanstalk:close(Q),
-          mongo:disconnect(Conn),
-          syslog:close(Log);
-        _Me ->
-          syslog:log(Log, err, "Error connecting to db: ~p", [ _Me ])
-      end;
+      register_and_listen_to_queue(Q, Tube, Log, ReceiveFun),
+      % Make sure we shut stuff down when we should
+      beanstalk:close(Q),
+      syslog:close(Log);
     _E ->
       syslog:log(Log, err, "Error connecting to beanstalk: ~p", [ _E ])
   end.
 
-register_and_listen_to_queue(Q, Tube, Log, ReceiveFun, Conn) ->
+register_and_listen_to_queue(Q, Tube, Log, ReceiveFun) ->
   beanstalk:watch(Q, Tube),
   beanstalk:use(Q, notify),
-  process_queue(Q, Log, ReceiveFun, Conn).
+  process_queue(Q, Log, ReceiveFun).
 
-process_queue(Q, Log, ReceiveFun, Conn) ->
+process_queue(Q, Log, ReceiveFun) ->
   case beanstalk:reserve(Q) of
     { reserved, JobId, Message } -> 
       try 
-        ReceiveFun(binary:bin_to_list(Message), Q, Conn, Log) 
+        ReceiveFun(binary:bin_to_list(Message), Q, Log) 
       of
         _ -> ok
       catch 
@@ -44,7 +37,7 @@ process_queue(Q, Log, ReceiveFun, Conn) ->
         beanstalk:delete(Q, JobId)
       end
   end,
-  process_queue(Q, Log, ReceiveFun, Conn).
+  process_queue(Q, Log, ReceiveFun).
 
 time_stamp() ->
   iso_8601_fmt(calendar:local_time()).

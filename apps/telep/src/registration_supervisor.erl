@@ -40,6 +40,9 @@ init({}) ->
         { signature_handler,
           { signature_handler, start_link, [ "/etc/telep", "telep" ] },
           permanent, 1000, worker, [ signature_handler ] },
+        { template_processor,
+          { template_processor, start_link, [ ] },
+          permanent, 1000, worker, [ template_processor ] },
         { robot_db,
           { robot_db, start_link, [ ] },
           permanent, 1000, worker, [ robot_db ] }
