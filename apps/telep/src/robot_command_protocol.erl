@@ -58,10 +58,21 @@ loop(command_wait, Socket, Transport, Q, Log, TubeName) ->
   { watching, _ } = beanstalk:watch(Q, io_lib:format("~s_commands", [ TubeName ])),
   % Wait on the queue for 10 seconds
   case beanstalk:reserve(Q, 10) of
+
     { reserved, JobId, BMessage } ->
-      send_message(Socket, Transport, binary:bin_to_list(BMessage)),
+      % Regardless of the disposition of the received message, we need to
+      % delete the beanstalk job.
       { deleted } = beanstalk:delete(Q, JobId),
-      loop(command_wait, Socket, Transport, Q, Log, TubeName);
+      case send_message(Socket, Transport, binary:bin_to_list(BMessage)) of
+        ok ->
+          % Message was sent OK, back around the loop we go.
+          loop(command_wait, Socket, Transport, Q, Log, TubeName);
+        Error ->
+          kill_remaining_jobs(Q),
+          { inserted, _ } = beanstalk:put(Q, binary:list_to_bin(io_lib:format("unregister|~s", [ TubeName ]))),
+          syslog:log(Log, err, "Robot ~s closed the socket: ~p",  [ TubeName, Error ])
+      end;
+
     { timed_out } ->
       % The idea here is to see if the socket is still alive
       % before we loop back into waiting on the queue. If we
@@ -72,17 +83,32 @@ loop(command_wait, Socket, Transport, Q, Log, TubeName) ->
           % Socket is OK, back to waiting on the tube
           loop(command_wait, Socket, Transport, Q, Log, TubeName);
         Error ->
+          % We don't have to worry about clearing out the queue here;
+          % if we got a timeout, then by definition there are no jobs
+          % on the queue.
           % OK, the socket is closed; notify of the de-registration
           % and drop out of the loop.
           { inserted, _ } = beanstalk:put(Q, binary:list_to_bin(io_lib:format("unregister|~s", [ TubeName ]))),
           syslog:log(Log, err, "Robot ~s closed the socket: ~p",  [ TubeName, Error ])
       end;
+
     Error ->
       % Log the error it and drop out of the loop.
       syslog:log(Log, err, "Error reserving a job: ~p",  [ Error ])
   end.
 
 %% Private methods
+
+kill_remaining_jobs(Q) ->
+  case beanstalk:reserve(Q, 0) of
+    { reserved, JobId, _BMessage } ->
+      { deleted } = beanstalk:delete(Q, JobId),
+      kill_remaining_jobs(Q); % Loop back until we get them all.
+
+    { timed_out } ->
+      ok
+  end.
+
 
 receive_message(Socket, Transport) ->
   case Transport:recv(Socket, 0, 10000) of
