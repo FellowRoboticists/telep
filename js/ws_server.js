@@ -75,9 +75,12 @@ var wss = new WebSocketServer( { server: app } );
  * received on the beanstalk 'notify' tube'.
  */
 function processNotification(ws, job, connectionState, callback) {
-  ws.send(job.data, function(err) {
-    if (err) {
-      console.log("Got error within socket");
+  var components = job.data.split("|");
+  var message = { type: components[0] === 'robot_registered' ? 'register' : 'unregister',
+    data: { name: components[1] } };
+  var json = JSON.stringify(message);
+  ws.send(json, function(err) {
+    if (err) {  
       console.log(err);
       connectionState.connected = false;
     }

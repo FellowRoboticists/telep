@@ -68,20 +68,21 @@ var ws = $.websocket(wsUri, {
     $("#robot_id").val("");
     $("#output").append("DISCONNECTED")
   },
-  message: function(e) { 
-    var message = e.originalEvent.data;
-    var components = message.split("|");
-    var reg_unreg = components[0];
-    var robot_name = components[1]
-    var selected = $("#robot_id").val();
-    if (reg_unreg === "robot_registered") {
+  events: {
+    register: function(e) {
+      var selected = $("#robot_id").val();
+      var robot_name = e.data.name;
       var optionHtml = addRobotOption(robot_name, selected);
       $("#robot_id").empty().append(optionHtml);
-    } else {
+      $("#output").append('<br><span style="color: blue;">REGISTER: ' + e.data.name + "</span><br>") 
+    },
+    unregister: function(e) {
+      var selected = $("#robot_id").val();
+      var robot_name = e.data.name;
       var optionHtml = removeRobotOption(robot_name, selected)
       $("#robot_id").empty().append(optionHtml);
+      $("#output").append('<br><span style="color: blue;">UNREGISTER: ' + e.data.name + "</span><br>") 
     }
-    $("#output").append('<br><span style="color: blue;">RESPONSE: ' + e.originalEvent.data + "</span><br>") 
   }
 });
 
