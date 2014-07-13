@@ -44,7 +44,7 @@ function watchForNotifications(ws, connectionState) {
   var client = bs.Client();
   client.watch(tube).onSuccess(function(data) {
     client.reserve().onSuccess(function(job) {
-      console.log('received job' + job);
+      console.log('received job: ' + job.data);
       if (connectionState.connected) {
         watchForNotifications(ws, connectionState);
 
