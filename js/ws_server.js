@@ -20,6 +20,8 @@ var WebSocketServer = require('ws').Server;
 var bs = require('nodestalker'),
     tube = 'notify';
 
+var client = bs.Client();
+
 var app = null;
 
 // dummy request processing
@@ -41,17 +43,17 @@ function ConnectionState() {
  * tube and hands them off for processing.
  */
 function watchForNotifications(ws, connectionState) {
-  var client = bs.Client();
   client.watch(tube).onSuccess(function(data) {
     client.reserve().onSuccess(function(job) {
       console.log('received job: ' + job.data);
       if (connectionState.connected) {
-        watchForNotifications(ws, connectionState);
+
+        process.nextTick(function() { 
+          watchForNotifications(ws, connectionState); 
+        });
 
         processNotification(ws, job, connectionState, function() {
-          client.deleteJob(job.id).onSuccess(function(del_msg) {
-            client.disconnect();
-          });
+          client.deleteJob(job.id).onSuccess(function(del_msg) { });
         });
       }
     });
@@ -76,7 +78,8 @@ var wss = new WebSocketServer( { server: app } );
  */
 function processNotification(ws, job, connectionState, callback) {
   var components = job.data.split("|");
-  var message = { type: components[0] === 'robot_registered' ? 'register' : 'unregister',
+  var message = { 
+    type: components[0] === 'robot_registered' ? 'register' : 'unregister',
     data: { name: components[1] } };
   var json = JSON.stringify(message);
   ws.send(json, function(err) {
@@ -86,7 +89,7 @@ function processNotification(ws, job, connectionState, callback) {
     }
   });
 
-  setTimeout(function() { callback(); }, 1000)
+  callback();
 }
 
 // Deal with connections to the websocket server
@@ -103,3 +106,5 @@ wss.on('connection', function(ws) {
   });
 
 });
+
+console.log("Waiting for notifications from beanstalk");

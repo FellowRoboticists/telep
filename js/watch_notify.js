@@ -3,6 +3,8 @@ var bs = require('nodestalker'),
     tube = 'test_tube',
     events = require('events');
 
+var client = bs.Client();
+
 function Commander() {
   events.EventEmitter.call(this);
 
@@ -20,7 +22,6 @@ commander.on('do', function(command) {
 });
 
 function reserveJob() {
-  var client = bs.Client();
   client.watch(tube).onSuccess(function(data) {
     client.reserve().onSuccess(function(job) {
       process.nextTick(reserveJob); // Go back and listen for more
