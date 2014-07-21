@@ -7,15 +7,12 @@
 # 
 # The main target for deploying the ws_server
 #
-deploy_ws_server: /etc/init.d/ws_server /etc/sysconfig/ws_server /usr/local/ws_server/ws_server.js /var/log/ws_server
+deploy_ws_server: /etc/init.d/ws_server /etc/sysconfig/ws_server /var/log/ws_server
 
 /etc/init.d/ws_server: scripts/ws_server
 	sudo cp $< $@
 
 /etc/sysconfig/ws_server: config/ws_server
-	sudo cp $< $@
-
-/usr/local/ws_server/ws_server.js: js/ws_server.js /usr/local/ws_server 
 	sudo cp $< $@
 
 /usr/local/ws_server:

@@ -11,7 +11,7 @@
 . /etc/rc.d/init.d/functions
 
 APP_NAME=ws_server
-OPTIONS=/usr/local/$APP_NAME/$APP_NAME.js
+OPTIONS=/usr/local/bin/$APP_NAME
 LOGFILE=/var/log/$APP_NAME/$APP_NAME.log
 SYSCONFIG=/etc/sysconfig/$APP_NAME
 PID_FILE=/var/run/$APP_NAME.pid
@@ -27,7 +27,6 @@ NODEJS_GROUP=telep
 start() {
   echo -n $"Starting $APP_NAME: "
   daemon --user "$NODEJS_USER" "$nodejs $OPTIONS >> $LOGFILE &"
-  # daemon --user "$NODEJS_USER" --pidfile "$PID_FILE" "$nodejs $OPTIONS >> $LOGFILE &"
   RETVAL=$?
   echo
   [ $RETVAL -eq 0 ] && touch /var/lock/subsys/$APP_NAME
