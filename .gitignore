@@ -19,3 +19,6 @@ user.lst
 *.crt
 *.csr
 *.key
+
+# Ignore erlang unit test build directory
+.eunit
