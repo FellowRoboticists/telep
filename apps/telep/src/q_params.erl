@@ -6,9 +6,13 @@
 -module(q_params).
 -export([ parse_query_parameters/1 ]).
 
+-type nvp() :: nonempty_string().
+
 -ifdef(TEST).
 -include_lib("eunit/include/eunit.hrl").
 -endif.
+
+-spec parse_name_value(nvp()) -> tuple().
 
 parse_name_value(Nvp) ->
   case string:tokens(Nvp, "=") of
@@ -23,6 +27,8 @@ parse_name_value(Nvp) ->
       {}
   end.
 
+-spec convert_to_params(list(string()), list(tuple())) -> list(tuple()).
+
 convert_to_params([], NewList) ->
   NewList;
 convert_to_params([Head|Tail], NewList) ->
@@ -32,6 +38,8 @@ convert_to_params([Head|Tail], NewList) ->
     {} ->
       convert_to_params(Tail, NewList)
   end.
+
+-spec parse_query_parameters(string()) -> list(tuple()).
 
 parse_query_parameters(QString) ->
   Nvps = string:tokens(QString, "&"),
