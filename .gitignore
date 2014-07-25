@@ -11,6 +11,10 @@ node_modules
 .erlang
 rebar
 apps/telep/ebin
+apps/telep/doc/*.html
+apps/telep/doc/*.css
+apps/telep/doc/*.png
+apps/telep/doc/edoc-info
 group.lst
 user.lst
 
