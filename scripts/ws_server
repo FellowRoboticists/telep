@@ -12,7 +12,7 @@
 
 APP_NAME=ws_server
 OPTIONS=/usr/local/bin/$APP_NAME
-LOGFILE=/var/log/$APP_NAME/$APP_NAME.log
+LOGFILE=/var/log/$APP_NAME/${APP_NAME}_stdout.log
 SYSCONFIG=/etc/sysconfig/$APP_NAME
 PID_FILE=/var/run/$APP_NAME.pid
 
