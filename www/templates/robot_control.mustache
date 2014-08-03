@@ -18,6 +18,16 @@
       <option value='{{robot}}'>{{robot}}</option>
       {{/registered_robots}}
     </select>
+    <p>Keyboard commands:</p>
+    <ul>
+      <li>[sS ] - Stop</li>
+      <li>[fF] - Forward (repeat speeds up)</li>
+      <li>[bB] - Backward (repeat speeds up)</li>
+      <li>[rR] - Rotate Clockwise (repeat speeds up)</li>
+      <li>[lL] - Rotate Counter-clockwise (repeat speeds up)</li>
+      <li>[dD] - Slow down</li>
+    </ul>
+
     <table>
       <colgroup>
         <col width='150px'/>
@@ -46,7 +56,12 @@
         <tr/>
       </tbody>
     </table>
+    <input type='hidden' name='currentCommand' id='currentCommand' value=''>
 
+    <div>
+      <p>The command:</p>
+      <div id='theCommand' />
+    </div>
     <div>
       <p>The result of the call:</p>
       <div id='div_result' />
@@ -56,5 +71,7 @@
       <div id='output'></div>
     </div>
     <script src='/assets/robot_control.js'></script>
+    <hr>
+    <p align="right">Version: {{app_version}}</p>
   </body>
 </html>
