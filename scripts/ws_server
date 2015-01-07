@@ -23,7 +23,7 @@ NODEJS_GROUP=telep
 # Source the configuration file
 . "$SYSCONFIG" || true
 
-OPTIONS=/usr/local/bin/$APP_NAME --cert $CERT_NAME --port $PORT_NUMBER --tube $TUBE_NAME
+OPTIONS="/usr/local/bin/$APP_NAME --cert $CERT_NAME --port $PORT_NUMBER --tube $TUBE_NAME"
 
 start() {
   echo -n $"Starting $APP_NAME: "
