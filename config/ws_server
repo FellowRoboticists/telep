@@ -3,3 +3,7 @@
 # as of yet.
 
 export NODE_PATH=/usr/local/lib/node_modules
+
+CERT_NAME=giskard-telep
+TUBE_NAME=notify
+PORT_NUMBER=8081

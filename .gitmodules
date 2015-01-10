@@ -1,0 +1,20 @@
+[submodule "third-party/beanstalk"]
+	path = third-party/beanstalk
+	url = git@github.com:FellowRoboticists/erlang-beanstalk.git
+	branch = convert_to_app
+[submodule "third-party/bson"]
+	path = third-party/bson
+	url = git://github.com/TonyGen/bson-erlang.git
+[submodule "third-party/mongodb"]
+	path = third-party/mongodb
+	url = git@github.com:FellowRoboticists/mongodb-erlang.git
+	branch = telep_tweaks
+[submodule "third-party/mustache"]
+	path = third-party/mustache
+	url = git@github.com:mojombo/mustache.erl.git
+[submodule "third-party/ranch"]
+	path = third-party/ranch
+	url = git@github.com:extend/ranch.git
+[submodule "third-party/syslog"]
+	path = third-party/syslog
+	url = git@github.com:Vagabond/erlang-syslog.git
