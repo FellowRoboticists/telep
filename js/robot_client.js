@@ -35,7 +35,7 @@ function signMessage(keyPath, name, message) {
   return message + "|" + signature;
 }
 
-client.connect(5555, 'daneel', function() {
+client.connect(5555, 'giskard', function() {
     console.log('Connected');
 });
 

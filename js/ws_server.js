@@ -6,8 +6,8 @@
 var cfg = { 
      ssl: true,
      port: 8081,
-     ssl_key: '/etc/pki/tls/private/daneel-telep.key',
-     ssl_cert: '/etc/pki/tls/certs/daneel-telep.crt'
+     ssl_key: '/etc/pki/tls/private/giskard-telep.key',
+     ssl_cert: '/etc/pki/tls/certs/giskard-telep.crt'
 };
 
 var fs = require('fs');

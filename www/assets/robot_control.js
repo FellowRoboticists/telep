@@ -2,10 +2,10 @@
  * This javascript file supports the robot_control.html page.
  * It was pulled out of the html page itself when the page
  * was mustache-templated. For some reason, the mustache
- * engine kind of whacks things up. It's better to separte
+ * engine kind of whacks things up. It's better to separate
  * the javascript anyway IMHO.
  */
-var wsUri = "wss://daneel:8081/";
+var wsUri = "wss://giskard:8081/";
 
 function addRobotOption(robot, selected) {
   var options = getCurrentRobotOptions();
