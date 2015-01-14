@@ -1,7 +1,7 @@
 { application, telep,
   [ 
     { description, "Support for the Telepresence Robot" },
-    { vsn, "0.1.1" },
+    { vsn, "0.1.2" },
     { modules, [
                  command_queue_worker,
 		 command_worker,
