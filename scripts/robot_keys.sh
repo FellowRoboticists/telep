@@ -12,6 +12,7 @@ shift 1
 [ -z "$ROBOT_NAME" ] && echo "Must specify the robot name" && exit 1
 
 PRIVATE_KEY_NAME="${ROBOT_NAME}_private.pem"
+ANDROID_PRIVATE_KEY_NAME="${ROBOT_NAME}_private_android.pem"
 PUBLIC_KEY_NAME="${ROBOT_NAME}_public.pem"
 
 echo "The name of the robot is: $ROBOT_NAME"
@@ -21,3 +22,7 @@ openssl genrsa -out $PRIVATE_KEY_NAME 2048
 
 # Generate the public key
 openssl rsa -in $PRIVATE_KEY_NAME -pubout -out $PUBLIC_KEY_NAME
+
+# For the coup de gras, we also need to generate a key from the
+# robot key that Android can deal with
+openssl pkcs8 -topk8 -inform PEM -outform PEM -in $PRIVATE_KEY_NAME -out $ANDROID_PRIVATE_KEY_NAME -nocrypt
